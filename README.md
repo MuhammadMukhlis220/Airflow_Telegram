@@ -161,3 +161,9 @@ Ketika task gagal maka akan ada notifikasi ke id pengguna yang kita daftarkan di
 ![Alt Text](/pic/result_1.png)
 
 Gambar 9
+
+Ketika DAG berhasil dijalankan, kita mengeksekusi task terakhir yaitu mengirim notifikasi berhasil:
+
+![Alt Text](/pic/result_2.png)
+
+Gambar 10
