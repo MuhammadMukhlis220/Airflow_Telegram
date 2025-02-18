@@ -30,7 +30,7 @@ Gambar 3
 
 Kemudian cek url dengan me-refresh web pagenya dan hasilnya kita akan mencatat ID akun yang berbicara dengan bot kita.
 
-![Alt Text](/pic/register_4.png)
+![Alt Text](/pic/register_0.png)
 
 Gambar 4
 
