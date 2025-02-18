@@ -134,7 +134,7 @@ Jika kita ingin airflow melakukan sesuatu saat **setiap task** gagal atau berhas
 
 Mari kita masukkan library yang dibutuhkan dan variabel untuk token dan id akun.
 
-![Alt Text](/pic/code_1.png)
+![Alt Text](/pic/code_0.png)
 
 Gambar 5
 
