@@ -1,6 +1,8 @@
 ---
 # **Integrating Airflow Notification With Telegram**
 
+The DAG code provided in AIrflow staging's ip of Onyx Big Data Platform
+
 Di repository ini kita akan belajar untuk mengintegrasikan airflow mengirim notifikasi perihal DAG ke user menggunakan aplikasi Telegram.
 
 ## Step 1 Daftar Bot
