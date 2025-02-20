@@ -12,7 +12,7 @@ Kemudian gunakan command di gambar berikut untuk berinteraksi dengan BotFather d
 ![Alt Text](/pic/register_1.png)
 Gambar 1
 
-**Perlu diingat bahwa command yang diberikan bisa-bisa berubah setiap waktu.**
+**Perlu diingat bahwa command yang diberikan bisa saja berubah setiap waktu.**
 
 Catat API token yang diberikan seperti yang dikotaki berwarna merah. Jika token tidak ada coba untuk bertanya ke BotFather lagi tentang bot yang kita buat seperti gambah di bawah ini:
 
