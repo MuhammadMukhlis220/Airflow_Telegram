@@ -1,46 +1,43 @@
 ---
 # **Integrating Airflow Notification With Telegram**
 
-*The DAG code already in AIrflow staging's ip of Onyx Big Data Platform named kirim_telegram_notif*
+*The DAG code is already in the Airflow staging's IP of Onyx Big Data Platform, named `kirim_telegram_notif`.*
 
-Di repository ini kita akan belajar untuk mengintegrasikan airflow mengirim notifikasi perihal DAG ke user menggunakan aplikasi Telegram.
+In this repository, we will learn how to integrate Airflow to send notifications about the DAG status to users via the Telegram application.
 
-## Step 1 Daftar Bot
-Di telegram cari pengguna dengan mencari username BotFather
-Kemudian gunakan command di gambar berikut untuk berinteraksi dengan BotFather dengan tujuan membuat bot.
+## Step 1 Register a Bot
+Search for the user with the username `BotFather` on Telegram.
+Then use the command shown in the image below to interact with BotFather in order to create a bot.
 
 ![Alt Text](/pic/register_1.png)
-Gambar 1
+**Figure 1**
 
-**Perlu diingat bahwa command yang diberikan bisa saja berubah setiap waktu.**
+**Note**: The commands provided may change at any time.
 
-Catat API token yang diberikan seperti yang dikotaki berwarna merah. Jika token tidak ada coba untuk bertanya ke BotFather lagi tentang bot yang kita buat seperti gambah di bawah ini:
+Make sure to note the API token that is provided, as highlighted in red. If you do not receive the token, try asking BotFather again about the bot you created, as shown in the image below:
 
 ![Alt Text](/pic/register_2.png)
+**Figure 2**
 
-Gambar 2
-
-Setelah mendapatkan token, pergi ke url : `https://api.telegram.org/bot<TOKEN_BOT_YANG_DIBUAT>/getUpdates`
-Tujuannya adalah untuk mencari ID akun penerima notifikasi airflow.
-Coba cari username bot anda dan chat apapun dengannya.
+After obtaining the token, go to the following URL: `https://api.telegram.org/bot<TOKEN_OF_CREATED_BOT>/getUpdates`.
+This URL will help you find the recipient account ID for Airflow notifications.
+Try to search for your bot's username and send any message to it.
 
 ![Alt Text](/pic/register_3.png)
+**Figure 3**
 
-Gambar 3
-
-Kemudian cek url dengan me-refresh web pagenya dan hasilnya kita akan mencatat ID akun yang berbicara dengan bot kita.
+Then, refresh the page, and you will see the account ID of the user who is chatting with your bot.
 
 ![Alt Text](/pic/register_0.png)
+**Figure 4**
 
-Gambar 4
+Make sure to note down the account ID, as highlighted in red.
 
-Catat nomor ID seperti yang dikotaki berwarna merah.
+**At this point, you have obtained the bot's token and the recipient account's ID.**
 
-**Sampai sini kita sudah mendapatkan akun bot dengan tokennya dan id penerima.**
+## Step 2 Create Airflow DAG
 
-## Step 2 Buat DAG Airflow
-
-Kita akan menggunakan pemrograman python untuk membuat DAG-nya. Library yang dibutuhkan adalah telegram dengan versi 13.15. Gunakan: `pip install python-telegram-bot==13.15` untuk mengistall library-nya. Sisa library yang di-import adalah bawaan dari airflow dan pythonnya langsung.
+We will use Python programming to create the DAG. The required library is `telegram` with version 13.15. Use: `pip install python-telegram-bot==13.15` to install the library. The remaining libraries are imported from Airflow and Python directly.
 
 For the complete Python programming code, refer to the following block.
 <details>
@@ -102,7 +99,7 @@ dag = DAG(
     tags=['test', 'telegram', 'python']
 )
 
-# Task yang akan gagal
+# Failed task
 def task_gagal():
     print("halo-halo bandung")
     #raise ValueError('Task ini gagal! Disengaja')
@@ -128,46 +125,47 @@ t1 >> success_message
    </details>
 
 
-Untuk membuat code kita mengirim notifikasi, airflow sudah memberikan kita ruang untuk berkreasi di dalam parameter `default_args`. Di dalam `default_args` terdapat dua parameter yang tujuannya adalah "Jika task gagal akan eksekusi apa? dan jika task berhasil akan eksekusi apa?" kedua itu ada di dalam parameter `on_failure_callback` dan `on_success_callback`. 
+To make the code send notifications, Airflow provides us with space to be creative within the `default_args` parameter. Inside `default_args`, there are two parameters that determine "What should happen if a task fails? And what should happen if a task succeeds?" These two parameters are `on_failure_callback` and `on_success_callback`.
 
-Jika kita ingin airflow melakukan sesuatu saat **setiap task** gagal atau berhasil, maka kita harus mengisi kedua parameter tersebut. DI case kali ini **kita akan mengirim notifikasi jika satu task gagal dan mengirim notifikasi jika semua task berhasil**. Karena kita akan mengirim notifikasi jika task gagal maka kita akan mengisi parameter `on_failure_callback` **tanpa** mengisi parameter `on_success_callback`. Jika kita mengisi parameter `on_success_callback` yang terjadi adalah ada perlakukan airflow di setiap task yang berhasil, dimana kita ingin perlakuannya dieksekusi ketika **semua task** berhasil.
+If we want Airflow to perform an action whenever **each task** fails or succeeds, we need to fill in both parameters. In this case, **we will send a notification if one task fails and send a notification if all tasks succeed**. Since we want to send a notification when a task fails, we will fill the `on_failure_callback` parameter **without** filling in the `on_success_callback`. If we filled in the `on_success_callback` parameter, what would happen is Airflow would apply the action for **every successful task**, whereas we want the action to be executed only when **all tasks** succeed.
 
-Mari kita masukkan library yang dibutuhkan dan variabel untuk token dan id akun.
+Let’s add the necessary libraries and variables for the token and account ID.
 
 ![Alt Text](/pic/code_0.png)
 
-Gambar 5
+**Figure 5**
 
-Kita membuat fungsi `send_telegram_fail_alert(context)` yang akan diisi untuk parameter `on_failure_callback`. Isi dari pesan ini adalah variabel-variabel dari fungsi DAG yang sudah disediakan secara default oleh airflow seperti anma dag, dama task dan eaktu eksekusi dengan memanggil `context`. Kita menggunakan pytz untuk mengubah waktu yang tidak sesuai menjadi time zone yang kita inginkan.
+We create the function `send_telegram_fail_alert(context)`, which will be assigned to the `on_failure_callback` parameter. The message will contain variables provided by Airflow’s default context, such as the DAG name, task name, and execution time, accessed using `context`. We use `pytz` to convert the time to the desired time zone.
 
 ![Alt Text](/pic/code_2.png)
 
-Gambar 6
+**Figure 6**
 
-Untuk mengirim notifikasi yang berisi DAG berhasil dijalankan tanpa error, kita membuat fungsi kedua bernama `send_telegram_success_final_message(**context)`.
+To send a notification indicating that the DAG ran successfully without errors, we create a second function named `send_telegram_success_final_message(**context)`.
 
 ![Alt Text](/pic/code_3.png)
 
-Gambar 7
+**Figure 7**
 
-Fungsi tersebut kita jadikan sebagai task terakhir yang akan dieksekusi
+This function is set as the last task to be executed.
 
 ![Alt Text](/pic/code_4.png)
 
-Gambar 8
+**Figure 8**
 
-## Step 3 Cek Hasil
+## Step 3 Check Results
 
-Ketika task gagal maka akan ada notifikasi ke id pengguna yang kita daftarkan di variabel `TELEGRAM_CHAT_ID`. Hasilnya adalah:
+When a task fails, a notification will be sent to the user ID registered in the `TELEGRAM_CHAT_ID` variable. The result will be:
 
 ![Alt Text](/pic/result_1.png)
 
-Gambar 9
+**Figure 9**
 
-Ketika DAG berhasil dijalankan, kita mengeksekusi task terakhir yaitu mengirim notifikasi berhasil:
+When the DAG runs successfully, the last task will execute, sending a success notification:
 
 ![Alt Text](/pic/result_2.png)
 
-Gambar 10
+**Figure 10**
 
-**Demikian tutorial ini dibuat, selamat mencoba**
+
+**That all, happy experimenting!**
