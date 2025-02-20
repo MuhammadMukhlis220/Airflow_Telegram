@@ -169,3 +169,5 @@ Ketika DAG berhasil dijalankan, kita mengeksekusi task terakhir yaitu mengirim n
 ![Alt Text](/pic/result_2.png)
 
 Gambar 10
+
+**Demikian tutorial ini dibuat, selamat mencoba**
